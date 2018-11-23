@@ -16,7 +16,7 @@ const char* mqtt_server = "192.168.2.150";
 int receiver = 4;   //D2
 
 //receive variables
-int prev_signal = 0;
+unsigned long prev_signal = 0;
 unsigned long timestamp = 0;
 
 //transmit variables
@@ -49,7 +49,7 @@ int value = 0;
 void callback(char* topic, byte* payload, unsigned int length) {
 
   String tp = topic;
-  char message[] = "";
+  char message[10] = "";
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
@@ -67,14 +67,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   if (tp.indexOf("/bridge/433/433_transmit_command")>=0) {
     myReceiver.disableReceive();
-    mySwitch.send(message_int, 24);
+    mySwitch.send(message_int, 32);
     myReceiver.enableReceive(receiver);
     Serial.print("433 send: ");
     Serial.println(message_int);
   }
   else if (tp.indexOf("/bridge/ir/ir_transmit_command")>=0) {
     myReceiver.disableReceive();
-    mySwitch.send(message_int, 24);
+    mySwitch.send(message_int, 32);
     myReceiver.enableReceive(receiver);
     Serial.print("ir send: ");
     Serial.println(message_int);
@@ -107,7 +107,7 @@ void loop() {
 
   if (myReceiver.available()) {
 
-    int signal = myReceiver.getReceivedValue();
+    unsigned long signal = myReceiver.getReceivedValue();
     char signal_c[] = "";
     itoa(signal, signal_c, 10);
 
