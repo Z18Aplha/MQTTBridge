@@ -76,6 +76,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("setup begin");
   mySwitch.enableTransmit(2);
+  mySwitch.setProtocol(1);    //standard is 1, just a reminder
   myReceiver.enableReceive(receiver);
   setup_wifi();
   client.setServer(mqtt_server, 1883);

@@ -74,7 +74,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   else if (tp.indexOf("/bridge/ir/ir_transmit_command")>=0) {
     myReceiver.disableReceive();
+    mySwitch.setProtocol(1);   //1 is needed for Arduino-Arduino communication
     mySwitch.send(message_int, 32);
+    mySwitch.setProtocol(4);   //reset to 4 - to connect to CMI plugs
     myReceiver.enableReceive(receiver);
     Serial.print("ir send: ");
     Serial.println(message_int);
@@ -88,7 +90,7 @@ void setup() {
   Serial.println("setup begin");
 
   mySwitch.enableTransmit(2);
-  mySwitch.setProtocol(4);
+  mySwitch.setProtocol(4);    //4 is for CMI plugs. Arduino-Arduino needs 1!
   myReceiver.enableReceive(receiver);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
